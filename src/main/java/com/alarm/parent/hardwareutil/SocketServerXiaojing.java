@@ -18,9 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 @Service
-	public class SocketServer2 {
+	public class SocketServerXiaojing {
 	
-/*	List<Socket> socketList = new ArrayList<>();
+	List<Socket> socketList = new ArrayList<>();
 	
 	public List<Socket> getSocketList() {
 		return socketList;
@@ -28,31 +28,28 @@ import org.springframework.stereotype.Service;
 
 	public void setSocketList(List<Socket> socketList) {
 		this.socketList = socketList;
-	}*/
+	}
 
-	private static final Logger logger = LoggerFactory.getLogger(SocketServer2.class);
-		@PostConstruct
+	private static final Logger logger = LoggerFactory.getLogger(SocketServerXiaojing.class);
+//		@PostConstruct
 		public void startAction(){
-//			logger.info(arg0);
-			logger.info("开始socket...");
-//			logger.info();
+//			System.out.println(arg0);
+			System.out.println("开始socket...");
+//			System.out.println();
 			ServerSocket serverSocket=null;
 			try {
 				serverSocket=new ServerSocket(9000);
 				while(true){
 					Socket socket=serverSocket.accept();
-//					socketList.add(socket);
-					logger.info("建立连接客户端端口:"+socket.getPort());
-					logger.info("建立连接客户端IP:"+socket.getInetAddress());
+					socketList.add(socket);
+					System.out.println("客户端端口:"+socket.getPort());
+					System.out.println("客户端IP:"+socket.getInetAddress());
 					BufferedWriter writer0 = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-					logger.info("---------"+socket.hashCode()+"发送---------"+"AT");
 					writer0.write("AT\r\n");
 					writer0.flush();
 					
 					
-//					writer0.write("AT+CWMSG=SET,0\r\nOK");
-					logger.info("---------"+socket.hashCode()+"发送---------"+"AT+CWMSG=SET,0,0,60,5,1,1");
-					writer0.write("AT+CWMSG=SET,0,0,60,5,1,1\r\nOK");
+					writer0.write("AT+CWMSG=SET,0\r\nOK");
 					writer0.flush();
 					
 					
@@ -83,7 +80,7 @@ import org.springframework.stereotype.Service;
 			}
 	 
 			@Override
-			public void run() {//这一个线程里面是一个设备连接
+			public void run() {
 				try {
 					reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					writer=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -98,64 +95,37 @@ import org.springframework.stereotype.Service;
 //					while( !(lineString=reader.readLine()).equals("OK") ){
 					while( (lineString=reader.readLine())!=null ){
 //						lineStr = lineStr + lineString;
-						logger.info("---------"+socket.hashCode()+"获取---------"+lineString);
+						System.out.println("------------------"+lineString);
 						
-						if(lineString.contains("DFA_ALARM")){//防区报警
+						if(lineString.contains("DFA_ALARM")){
 							String ss[] = lineString.split(",");
-							id = ss[0].substring(8, 11);
+							id = ss[0];
 							time = ss[1];
 							msgType = ss[2];
 							defenceArea = ss[3];
 							alarmType = ss[4];
-							logger.info("---------"+socket.hashCode()+"发送---------"+"AT+CWMSG="+id);
-							writer.write("AT+CWMSG="+id+"\r\n");//确认消息
-							writer.flush();
 							
-//							if(lineString.equals("OK")){
-							logger.info("---------"+socket.hashCode()+"发送---------"+"AT+CDAM=1,0,"+defenceArea+","+defenceArea);
+							writer.write("AT+CWMSG=0\r\n");//确认消息
+							writer.flush();
+						}
+						if(lineString.equals("OK")){
 							writer.write("AT+CDAM=1,0,"+defenceArea+","+defenceArea+"\r\n");//撤防
 							writer.flush();
-//							}
 						}
-						if(lineString.contains("DFA_RESTORE")){//防区报警恢复
-							String ss[] = lineString.split(",");
-							id = ss[0].substring(8, 11);
-							time = ss[1];
-							msgType = ss[2];
-							defenceArea = ss[3];
-							alarmType = ss[4];
-							logger.info("---------"+socket.hashCode()+"发送---------"+"AT+CWMSG="+id);
-							writer.write("AT+CWMSG="+id+"\r\n");//确认消息
-							writer.flush();
-							
-						}
-						if(lineString.contains("USER_DISARM")){//用户撤防确认
-							String ss[] = lineString.split(",");
-							id = ss[0].substring(8, 11);
-							time = ss[1];
-							msgType = ss[2];
-							defenceArea = ss[3];
-							alarmType = ss[4];
-							logger.info("---------"+socket.hashCode()+"发送---------"+"AT+CWMSG="+id);
-							writer.write("AT+CWMSG="+id+"\r\n");//确认消息
-							writer.flush();
-							
-						}
-					
 //						Stream<String> lineTotal = reader.lines();
 					/*	if(lineString.equals("OK")){
-							logger.info("from  client ："+socket.hashCode()+"==="+lineStr);
-							logger.info("return from server ："+socket.hashCode()+"==="+"success ok");
+							System.out.println("from  client ："+socket.hashCode()+"==="+lineStr);
+							System.out.println("return from server ："+socket.hashCode()+"==="+"success ok");
 							lineStr = "";
 							
 						}*/
-//						logger.info("to client : "+"AT+CWMSG=SET,0\r\nOK");
+//						System.out.println("to client : "+"AT+CWMSG=SET,0\r\nOK");
 //						writer.write("AT+CWMSG=SET,0\r\nOK");
 //						writer.flush();
 						
 					}
 //					lineStr = lineStr + reader.readLine();
-					logger.info("from  client ："+socket.hashCode()+"=========="+lineStr+"OK");
+					System.out.println("from  client ："+socket.hashCode()+"=========="+lineStr+"OK");
 //					writer.write("return from server:"+"success ok"+"\n");
 //					writer.flush();
 //					
@@ -173,7 +143,7 @@ import org.springframework.stereotype.Service;
 			            }
 			            sb.append(temp);
 			         }
-			         logger.info("from client: " + sb);*/
+			         System.out.println("from client: " + sb);*/
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -195,10 +165,5 @@ import org.springframework.stereotype.Service;
 			}
 			
 		}
-public static void main(String[] args) {
-	String ss = "+CWMSG: 308";
-	String s = ss.substring(8, 11);
-	System.out.println(s);
-	
-}
+
 	}

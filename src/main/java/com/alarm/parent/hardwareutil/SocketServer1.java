@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 @Service
 	public class SocketServer1 {
+	//报警
 //		@PostConstruct
 		public void startAction(){
 			System.out.println("开始socket...");
@@ -62,7 +63,7 @@ import org.springframework.stereotype.Service;
 					reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					writer=new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 					String lineString="";
-					while( !(lineString=reader.readLine()).equals("ok") ){
+					while( (lineString=reader.readLine())!=null ){
 						System.out.println("from  client ："+socket.hashCode()+"==="+lineString);
 						System.out.println("return from server ："+socket.hashCode()+"==="+"success ok");
 						writer.write("return from server:"+"success ok"+"\n");
