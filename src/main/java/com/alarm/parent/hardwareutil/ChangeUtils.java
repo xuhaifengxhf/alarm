@@ -1,5 +1,9 @@
 package com.alarm.parent.hardwareutil;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -156,6 +160,19 @@ public class ChangeUtils {
 	        }  
 	        return result;  
 	    }  
+	   //字节转为float类型
+	   public static float bytesToFloat(byte[] bytes) throws IOException{
+		   //float 类型值为123.456 以大端模式存储数据即高字节存于低地址，低字节存于高地址,小端模式反之
+//		   byte bytes[]={(byte)0x40,(byte)0x37,(byte)0x0A,(byte)0x3E};
+	        //创建一个 ByteArrayInputStream，使用bytes作为其缓冲区数组
+	        ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+	        //再将bais 封装为DataInputStream类型
+	        DataInputStream dis=new DataInputStream(bais);
+	        float flt=dis.readFloat();
+	        dis.close();
+		    System.out.println(flt);
+		    return flt;
+	      }  
 	   
 	   
 	  	  //504F533838383834  POS88884
@@ -168,7 +185,7 @@ public class ChangeUtils {
 	  	  String hex = strToHex.convertStringToHex(str);
 	  	  System.out.println("转换为16进制 : " + hex);*/
 //	   String hex = "234744474C2D3138303030303123";
-	  	  String hex = "0103044166B8533C2D3030303123";
+	  	  String hex = "234744474C2D";
 	  	  System.out.println("16进制转换为ASCII");
 	  	  System.out.println("Hex : " + hex);
 	  	  System.out.println("ASCII : " + convertHexToString(hex));
